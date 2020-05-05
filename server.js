@@ -17,8 +17,6 @@ const cookieSession = require('cookie-session');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-/* Database */
-const UserModule = require('./routes/users');
 
 /* Middleware */
 app.use(morgan('dev'));
@@ -28,8 +26,13 @@ app.use(cors());
 app.use(express.static('public'));
 // app.set('view engine','ejs');
 
+
 /* Routes */
+const UserModule = require('./routes/users');
+const AuthModule = require('./routes/auth');
+
 app.use("/users",UserModule(db));
+app.use("/auth", AuthModule(db))
 
 /* Endpoints */
 app.get('/', (req, res)=>{
