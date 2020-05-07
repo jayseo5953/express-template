@@ -8,7 +8,7 @@ module.exports = service =>{
 
   passport.serializeUser((user,done)=> {
     console.log("userid: ",user.id)
-    done(null,`${user.id}`);
+    done(null,user.id);
   })
 
   passport.deserializeUser(async(id,done)=> {

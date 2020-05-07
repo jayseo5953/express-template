@@ -20,17 +20,20 @@ module.exports = service => {
     res.send('login')
   })
   router.get('/logout',(req,res)=>{
-    // req.logout()
-    console.log('logout!!', req.user)
-    console.log("session  from logout: ",req.session)
-    res.redirect("http://localhost:3000/login");
+    
+    // console.log('logout!!', req.user)
+    console.log("session from logout: ",req.session)
+    console.log("Authenticated? : ",req.isAuthenticated())
+    req.logout()
+    // res.statusCode(200);
+    res.send('sucessfully logged out')
   })
 
 
 // Google Oauth  
   router.get('/google',passport.authenticate("google",{
     scope:['profile','email'], // specify data you want, there are others
-  }),(req,res)=>{console.log("session1: ", req.session)})
+  }))
 
 
   // router.get(`/google`, (req, res, next) => {

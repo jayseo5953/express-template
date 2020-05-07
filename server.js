@@ -11,7 +11,7 @@ const db = new Pool(dbParams);
 // const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
-
+const passportSetup = require('./config/passport-setup');
 /* Constants */
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -21,12 +21,16 @@ const PORT = process.env.PORT || 8080;
 // app.set('view engine','ejs');
 app.use(morgan('dev'));
 // app.use(cookieParser()) // this or cookieSession
+const corsOptions = {
+  credentials: true,
+  origin: true,
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
-app.use(cors());
 app.use(express.static('public'));
 app.use(cookieSession({
-  name: "session",
   maxAge:24*60*60*1000,
   keys:[process.env.COOKIE_KEY]
 }));
