@@ -3,6 +3,9 @@ module.exports = repository => {
     getAllUsers: () => {
       return repository.getAllUsers();
     },
+    findUserById: (id) => {
+      return repository.findUserById(id);
+    },
     authWith_g_id: async (profile) => {
       const result = await repository.findUserWith_g_id(profile.id);
       let user = result.rows[0];

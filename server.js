@@ -8,21 +8,30 @@ const cors = require('cors');
 const { Pool } = require('pg');
 const dbParams = require('./config/db');
 const db = new Pool(dbParams);
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
+const passport = require('passport');
 
 /* Constants */
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 /* Middleware */
+
+// app.set('view engine','ejs');
 app.use(morgan('dev'));
+// app.use(cookieParser()) // this or cookieSession
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('public'));
-// app.set('view engine','ejs');
-
+app.use(cookieSession({
+  name: "session",
+  maxAge:24*60*60*1000,
+  keys:[process.env.COOKIE_KEY]
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 /* Routes */
 const UserModule = require('./routes/users');
@@ -42,9 +51,7 @@ app.listen(PORT, ()=> {
   console.log('Listening on', PORT);
 })
 
-
 //test
-
 // app.get('/:name', (req, res)=>{
 //   const name = req.params.name;
 //   console.log(name)

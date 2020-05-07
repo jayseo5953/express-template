@@ -4,6 +4,10 @@ module.exports = db => {
       const qs = `SELECT * FROM users;`;
       return db.query(qs);
     },
+    findUserById:(id)=>{
+      const qs = `SELECT * from users WHERE id = $1`
+      return db.query(qs,[id]);
+    },
     findUserWith_g_id: (g_id) => {
       const qs = `SELECT * FROM users WHERE google_id = $1;`
       return db.query(qs, [g_id]);
