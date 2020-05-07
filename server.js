@@ -6,17 +6,14 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const { Pool } = require('pg');
-const dbParams = require('./lib/db');
+const dbParams = require('./config/db');
 const db = new Pool(dbParams);
-// db.connect();
-
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 
 /* Constants */
 const app = express();
 const PORT = process.env.PORT || 8080;
-
 
 /* Middleware */
 app.use(morgan('dev'));
@@ -48,10 +45,10 @@ app.listen(PORT, ()=> {
 
 //test
 
-app.get('/:name', (req, res)=>{
-  const name = req.params.name;
-  console.log(name)
-  const qs = `INSERT INTO users (username) VALUES ($1);`
-  db.query(qs, [name])
-  res.end(name)
-})
+// app.get('/:name', (req, res)=>{
+//   const name = req.params.name;
+//   console.log(name)
+//   const qs = `INSERT INTO users (username) VALUES ($1);`
+//   db.query(qs, [name])
+//   res.end(name)
+// })
