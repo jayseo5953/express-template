@@ -6,22 +6,24 @@ const passport = require("passport");
 
 module.exports = service =>{
 
+  
   passport.serializeUser((user,done)=> {
     console.log("userid: ",user.id)
+    //Serialzer speicifies which data of user to store as a cookie
     done(null,user.id);
   })
 
   passport.deserializeUser(async(id,done)=> {
-    console.log("id: ", id)
     try {
-      console.log("========do i even run ==========")
+      // Deserializer take id from the session and use it to find the entire object
       const result = await service.findUserById(id);
       const user = result.rows[0];
       console.log("deserialized!: ", user)
+      // And make the object avaiable in the "subsequent" requests as req.user
       done(null, user)
     }
     catch (err) {
-      console.error(err)
+      console.error("err from serializer ",err)
     }
   })
 
@@ -39,6 +41,8 @@ module.exports = service =>{
       try {
         const user = await service.authWith_g_id(profile);
         // console.log("G AUTH DB QUERY RESULT: ", user);
+
+        //this is what is being sent to the serializeUser and also in /redirect as req.user
         done(null, user);
       }
       catch (err) {

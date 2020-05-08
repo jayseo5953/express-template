@@ -9,7 +9,6 @@ module.exports = service => {
     console.log("I am in Auth")
     try {
       const result = await service.getAllUsers();
-      console.log(result.rows);
       res.send(result.rows)
     }
     catch (err) {
@@ -20,12 +19,12 @@ module.exports = service => {
     res.send('login')
   })
   router.get('/logout',(req,res)=>{
-    
-    // console.log('logout!!', req.user)
-    console.log("session from logout: ",req.session)
-    console.log("Authenticated? : ",req.isAuthenticated())
+    //this req.user is from deserialize done(null, user)
+    console.log('======user from /logout=======')
+    console.log(req.user)
+    console.log("=======session from /logout========")
+    console.log(req.session)
     req.logout()
-    // res.statusCode(200);
     res.send('sucessfully logged out')
   })
 
@@ -36,30 +35,18 @@ module.exports = service => {
   }))
 
 
-  // router.get(`/google`, (req, res, next) => {
-  //   const authenticator = passport.authenticate("google", {
-  //     scope: ["profile","email"],
-  //   });
-  //   console.log("reqreq user: ", req.user);
-  //   console.log("reqreq session: ", req.session)
-  //   authenticator(req, res, next);
-  // });
-
-
-  router.get('/google/redirect',passport.authenticate("google",{
-    failureRedirect:"http://localhost:3000/login/"}), async(req,res)=>{
-      // console.log("req.query", req.user)
-      console.log("session2: ",req.session )
-      res.redirect("http://localhost:3000/users")
+  router.get('/google/redirect',
+    passport.authenticate("google",{
+     failureRedirect:"http://localhost:3000/login/"
+    }), async(req,res)=>{
+      //this req.user is from GoogleStrategy done(null,user)
+      
+      console.log("====req.user from google/redirect=======")
+      console.log(req.user)
+      console.log("====req.session from google/redirect=======: ")
+      console.log(req.session)
+      res.redirect(`http://localhost:3000/users?username=${req.user.username}&email=${req.user.email}`)
     })
-
-  // router.get('/google/redirect', (req, res, next) => {
-  //   passport.authenticate("google",(err, user, info) => {
-  //     req.logIn(user,(err)=>{
-  //       res.redirect('http://localhost:3000/users')
-  //     })
-  //   })(req, res, next)
-  // })
 
   return router;
 }
