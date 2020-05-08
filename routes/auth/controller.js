@@ -2,6 +2,8 @@ const router = require("express").Router();
 const passport = require("passport");
 const passportSetup = require('../../config/passport-setup')
 
+let user = {};
+
 module.exports = service => {
   passportSetup(service);
  
@@ -37,16 +39,19 @@ module.exports = service => {
 
   router.get('/google/redirect',
     passport.authenticate("google",{
-     failureRedirect:"http://localhost:3000/login/"
+     failureRedirect:"/login"
     }), async(req,res)=>{
       //this req.user is from GoogleStrategy done(null,user)
-      
       console.log("====req.user from google/redirect=======")
       console.log(req.user)
       console.log("====req.session from google/redirect=======: ")
       console.log(req.session)
-      res.redirect(`http://localhost:3000/users?username=${req.user.username}&email=${req.user.email}`)
+      user = {...req.user}
+      res.redirect('/profile')
     })
-
+    
+  router.get('/user',(req, res)=> {
+    res.send(user)
+  })
   return router;
 }
