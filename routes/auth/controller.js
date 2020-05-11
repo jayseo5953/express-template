@@ -15,9 +15,22 @@ module.exports = service => {
       console.error(err);
     }
   });
-  router.get('/login',(req,res)=>{
+
+  router.post('/register',(req,res)=>{
+    console.log("register")
+    console.log("req.user from /register: ",req.user)
+    console.log("submiited value: ",req.body)
+    res.send('register')
+  })
+
+  router.post('/login',(req,res)=>{
+    console.log("login~~~")
+    console.log("req.user from /login: ", req.user)
+    console.log("submiited value: ",req.body)
+
     res.send('login')
   })
+
   router.get('/logout',(req,res)=>{
     //this req.user is from deserialize done(null, user)
     console.log('======user from /logout=======')
