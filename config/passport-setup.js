@@ -30,7 +30,7 @@ module.exports = service =>{
   passport.use(
     new GoogleStrategy({
       //options for the google stategy
-      callbackURL:'/auth/google/redirect',
+      callbackURL:'http://localhost:3001/auth/google/redirect',
       clientID:process.env.CLIENT_ID,
       clientSecret:process.env.CLIENT_SECRET,
     }, async (accessToken, refreshToken, profile, done) =>{

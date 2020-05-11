@@ -40,15 +40,16 @@ module.exports = service => {
      failureRedirect:"/"
     }), async(req,res)=>{
       //this req.user is from GoogleStrategy done(null,user)
+
       console.log("====req.user from google/redirect=======")
       console.log(req.user)
       console.log("====req.session from google/redirect=======: ")
       console.log(req.session)
-      res.redirect('/profile')
+      res.redirect('http://localhost:3000/profile')
     })
     
   router.get('/user',(req, res)=> {
-    console.log("user from /user: ", req.user)
+    // console.log("user from /user: ", req.user)
     res.send(req.user)
   })
   return router;
