@@ -1,5 +1,7 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 const passport = require("passport");
+const bcrypt = require('bcrypt');
 
 // console.log("client id: ", process.env.CLIENT_ID)
 // console.log("client secret: ", process.env.CLIENT_SECRET)
@@ -16,7 +18,7 @@ module.exports = service =>{
   passport.deserializeUser(async(id,done)=> {
     try {
       // Deserializer take id from the session and use it to find the entire object
-      const result = await service.findUserById(id);
+      const result = await service.findUser("id",id);
       const user = result.rows[0];
       console.log("deserialized!: ", user)
       // And make the object avaiable in the "subsequent" requests as req.user
@@ -50,5 +52,27 @@ module.exports = service =>{
       }
     }
   ))
+  
+  const authenticateUser = async(email, password, done) => {
+    console.log("authenticator ran")
+    const result = await service.findUser('email', email);
+    const user = result.rows[0];
+    if (!user) {
+      return done(null,false,{message: 'No user with that email'})
+    }
+    try {
+      if (await bcrypt.compare(password, user.password)) {
+        return done(null,user);
+      } else {
+        return done(null,false, {message: 'Password incorret'})
+      }
+    }
+    catch (err) {
+      return done(err);
+    }
+  };
+
+  passport.use(new LocalStrategy({usernameField:'email',passwordField:'password'},authenticateUser))
+
   return passport
 }

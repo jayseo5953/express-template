@@ -1,16 +1,34 @@
 module.exports = db => {
   return {
+    // findUserById:(id)=>{
+    //   const qs = `SELECT * from users WHERE id = $1`
+    //   return db.query(qs,[id]);
+    // },
+    // findUserByEmail:(email)=>{
+    //   const qs = `SELECT * from users WHERE email = $1`
+    //   return db.query(qs,[email]);
+    // },
     getAllUsers: () => {
       const qs = `SELECT * FROM users;`;
       return db.query(qs);
     },
-    findUserById:(id)=>{
-      const qs = `SELECT * from users WHERE id = $1`
-      return db.query(qs,[id]);
+    findUser: (field, value) => {
+      console.log(field, value)
+      const qs = "SELECT * from users WHERE " +  field + " = $1 ;"
+      console.log("qs: ", qs)
+      return db.query(qs,[value])
     },
     findUserWith_g_id: (g_id) => {
       const qs = `SELECT * FROM users WHERE google_id = $1;`
       return db.query(qs, [g_id]);
+    },
+    createUserWithEmailPW: (user) => {
+      const email = user.email;
+      const password = user.password;
+      const username = user.username || "Anonymous"
+
+      const qs = `INSERT INTO users(email, password, username) VALUES($1, $2, $3) RETURNING *;`
+      return db.query(qs,[email, password, username])
     },
     createUserWith_g_profile: (profile)=>{
       const user = profile._json;

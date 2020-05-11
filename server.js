@@ -12,6 +12,8 @@ const db = new Pool(dbParams);
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const passportSetup = require('./config/passport-setup');
+const flash = require('express-flash');
+
 /* Constants */
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -29,7 +31,8 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static('public'))
+app.use(flash());
 app.use(cookieSession({
   // httpOnly:false,
   maxAge:24*60*60*1000,

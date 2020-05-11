@@ -1,9 +1,27 @@
 const router = require("express").Router();
 const passport = require("passport");
 const passportSetup = require('../../config/passport-setup')
+const bcrypt = require('bcrypt');
 
 module.exports = service => {
   passportSetup(service);
+
+  const checkAuthenticated = (req,res,next) => {
+    // this is for homepage
+    if (req.isAuthenticated()) {
+      return next()
+    } else {
+      res.redirect("http://localhost:3000/login")
+    }
+  }
+  const checkNotAuthenticated = (req,res,next) => {
+    // this is for login, registser
+    if (req.isAuthenticated()) {
+      res.redirect("http://localhost:3000")
+    } else {
+      return next()
+    }
+  }
  
   router.get('/', async (req,res)=>{
     console.log("I am in Auth")
@@ -16,19 +34,45 @@ module.exports = service => {
     }
   });
 
-  router.post('/register',(req,res)=>{
+  router.post('/register', async (req,res)=>{
     console.log("register")
     console.log("req.user from /register: ",req.user)
     console.log("submiited value: ",req.body)
-    res.send('register')
-  })
+    // res.send('register')
+    try {
+      let user = {...req.body};
+      
+      //bcrypt PW
+      const hashedPW = await bcrypt.hash(user.password,10);
+      user.password = hashedPW
+      
+      console.log("Creating user... ",user)
+       
+      const result = await service.createUserWithEmailPW(user);
+      // console.log("Result of createwithemail: ", result)
+      if (result == "userExists") {
+        res.status(400).send('Email Already Exists');
+      }
+      res.send(result);
+    }
+    catch (err) {
+      // set statuscode later
+      // console.log("errrrrr", err)
+      throw new Error('ERR FROM /register: '+ err)
+    }
+  });
 
-  router.post('/login',(req,res)=>{
-    console.log("login~~~")
+
+  router.post('/login',passport.authenticate('local'),(req,res)=>{
     console.log("req.user from /login: ", req.user)
     console.log("submiited value: ",req.body)
 
-    res.send('login')
+    res.send(req.user)
+  })
+
+  router.get('/check',(req,res)=>{
+    console.log('reqreq', req.user)
+    res.send('halo')
   })
 
   router.get('/logout',(req,res)=>{

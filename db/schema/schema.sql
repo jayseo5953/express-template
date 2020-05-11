@@ -1,8 +1,9 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   id SERIAL PRIMARY KEY NOT NULL,
-  username VARCHAR(255) NOT NULL,
+  username VARCHAR(255),
   email VARCHAR(255),
+  password TEXT,
   google_id TEXT,
-  photo:TEXT
+  photo TEXT
 );
