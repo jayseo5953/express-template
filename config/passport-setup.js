@@ -72,7 +72,10 @@ module.exports = service =>{
     }
   };
 
-  passport.use(new LocalStrategy({usernameField:'email',passwordField:'password'},authenticateUser))
+  passport.use(new LocalStrategy({
+    usernameField:'email',
+    // passwordField:'password'
+  },authenticateUser))
 
   return passport
 }
