@@ -73,6 +73,7 @@ module.exports = service => {
   router.get('/check',(req,res)=>{
     console.log('check req.user', req.user)
     console.log('check req.session', req.session)
+    console.log("this is a test")
     res.send('halo')
   })
 
